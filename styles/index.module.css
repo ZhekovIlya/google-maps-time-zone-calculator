@@ -1,0 +1,12 @@
+.layout {
+  display: flex;
+}
+
+.map {
+  width: 60%;
+  margin-right: 10px;
+}
+
+.rightColumn {
+  width: 40%;
+}

@@ -1,0 +1,66 @@
+.calculatorHeader {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.selectedTime {
+  display: inline-flex;
+  align-items: center;
+  margin: 10px 0;
+  width: 440px;
+}
+
+.selectedTimeLabel {
+  font-size: 24px;
+}
+
+.selectedTimeValue {
+  font-size: 32px;
+  margin-left: auto;
+}
+
+.resetAll {
+  display: inline-block;
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.resetAll:hover {
+  background-color: #3e8e41;
+}
+
+.markersList {
+  height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  height: 100%;
+}
+
+.tooltipText {
+  visibility: hidden;
+  width: 300px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltipText {
+  visibility: visible;
+}
