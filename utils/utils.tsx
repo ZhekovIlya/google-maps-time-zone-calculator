@@ -37,17 +37,17 @@ export function adjustTimeToTwoDigits(time: string) {
 };
 
 export function calculateLocalTimeAndOffset(timezone: Timezone, utcTime: Date) {
-    const localTimeZoneHoursOffset = (timezone.dstOffset + timezone.rawOffset) / 3600;
+    const localTimeZoneHoursOffset = (timezone.dstOffset + timezone.rawOffset) / MAX_SECONDS_AND_MINUTES / MAX_SECONDS_AND_MINUTES;
     let localTimeZoneHours = Math.floor(utcTime.getUTCHours() + localTimeZoneHoursOffset);
-    if (localTimeZoneHours >= 24) {
-        localTimeZoneHours -= 24;
+    if (localTimeZoneHours >= MAX_HOURS) {
+        localTimeZoneHours -= MAX_HOURS;
     }
     let localTimeZoneMinutes = utcTime.getUTCMinutes();
 
     if (localTimeZoneHoursOffset % 1 > 0) {
-        localTimeZoneMinutes += 60 * (localTimeZoneHoursOffset % 1);
-        if (localTimeZoneMinutes >= 60) {
-            localTimeZoneMinutes -= 60;
+        localTimeZoneMinutes += MAX_SECONDS_AND_MINUTES * (localTimeZoneHoursOffset % 1);
+        if (localTimeZoneMinutes >= MAX_SECONDS_AND_MINUTES) {
+            localTimeZoneMinutes -= MAX_SECONDS_AND_MINUTES;
             localTimeZoneHours += 1;
         }
     }
@@ -63,7 +63,14 @@ export function addTimeDiffSign(timeDiff: number) {
     return Math.sign(timeDiff) > -1 ? `+${timeDiff}` : `${timeDiff}`;
 }
 
-export const DATE = new Date();
+const MAX_SECONDS_AND_MINUTES = 60;
+const MILLIS_IN_SECONDS = 1000;
+const MAX_HOURS = 24;
+
+export function getUtcTimestamp(date: Date) {
+    return Math.floor((date.getTime() - (date.getTimezoneOffset() * MAX_SECONDS_AND_MINUTES* MILLIS_IN_SECONDS)) / MILLIS_IN_SECONDS).toString();
+}
+
 
 export const useStaticDate = () => {
     const [date, setDate] = useState(new Date());

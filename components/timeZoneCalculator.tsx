@@ -3,24 +3,22 @@
 import { useEffect, useState } from "react";
 import styles from '../styles/timeZoneCalculator.module.css';
 import { TimeInfo, TimeZoneCalculatorProps } from "../utils/types";
-import { DEFAULT_TIME_LABEL, addTimeDiffSign, adjustTimeToTwoDigits, calculateLocalTimeAndOffset, getTimezone, useStaticDate } from "../utils/utils";
+import { DEFAULT_TIME_LABEL, addTimeDiffSign, adjustTimeToTwoDigits, calculateLocalTimeAndOffset, getTimezone, getUtcTimestamp, useStaticDate } from "../utils/utils";
 
 import TimeZoneRow from "./timeZoneRow";
 
 export default function TimeZoneCalculator({ markers, setMarkers }: TimeZoneCalculatorProps) {
-    const staticDate = useStaticDate();
 
-    const [selectedRowId, setSelectedRowId] = useState<string>();
-    const [selectedTimeInfo, setSelectedTimeInfo] = useState<TimeInfo>({
+    const staticDate = useStaticDate();
+    const defaultTimeInfo = {
         label: DEFAULT_TIME_LABEL,
         time: `${adjustTimeToTwoDigits(staticDate.getUTCHours().toString())}:${adjustTimeToTwoDigits(staticDate.getUTCMinutes().toString())}`,
-    });
+    }
+    const [selectedRowId, setSelectedRowId] = useState<string>();
+    const [selectedTimeInfo, setSelectedTimeInfo] = useState<TimeInfo>(defaultTimeInfo);
 
     const handleResetAll = () => {
-        setSelectedTimeInfo({
-            label: DEFAULT_TIME_LABEL,
-            time: `${adjustTimeToTwoDigits(staticDate.getUTCHours().toString())}:${adjustTimeToTwoDigits(staticDate.getUTCMinutes().toString())}`,
-        });
+        setSelectedTimeInfo(defaultTimeInfo);
         setSelectedRowId('');
         setMarkers([]);
     };
@@ -28,10 +26,9 @@ export default function TimeZoneCalculator({ markers, setMarkers }: TimeZoneCalc
     useEffect(() => {
         const curMarker = markers[markers.length - 1];
         const curMarkerPosition = curMarker?.position;
-        const utcTimestamp = Math.floor((staticDate.getTime() - (staticDate.getTimezoneOffset() * 60000)) / 1000).toString();
 
         if (curMarkerPosition) {
-            getTimezone(`${curMarkerPosition.lat},${curMarkerPosition.lng}`, utcTimestamp).then(
+            getTimezone(`${curMarkerPosition.lat},${curMarkerPosition.lng}`, getUtcTimestamp(staticDate)).then(
                 res => {
                     if (typeof res == 'string') { return; }
                     setMarkers((prevMarkers) => {
