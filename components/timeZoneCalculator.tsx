@@ -27,10 +27,16 @@ export default function TimeZoneCalculator({ markers, setMarkers }: TimeZoneCalc
         const curMarker = markers[markers.length - 1];
         const curMarkerPosition = curMarker?.position;
 
-        if (curMarkerPosition) {
+        if (curMarkerPosition && !curMarker.localTime) {
             getTimezone(`${curMarkerPosition.lat},${curMarkerPosition.lng}`, getUtcTimestamp(staticDate)).then(
                 res => {
-                    if (typeof res == 'string') { return; }
+                    if (typeof res == 'string' || res.status == 'ZERO_RESULTS') {
+                        setMarkers((prevMarkers) => {
+                            return prevMarkers.filter(marker => marker.id !== curMarker.id);
+                        });
+                        return;
+                    }
+
                     setMarkers((prevMarkers) => {
                         return prevMarkers.map(marker => {
                             if (marker.id === curMarker.id) {
