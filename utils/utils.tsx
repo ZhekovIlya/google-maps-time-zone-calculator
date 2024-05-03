@@ -39,6 +39,9 @@ export function adjustTimeToTwoDigits(time: string) {
 export function calculateLocalTimeAndOffset(timezone: Timezone, utcTime: Date) {
     const localTimeZoneHoursOffset = (timezone.dstOffset + timezone.rawOffset) / 3600;
     let localTimeZoneHours = Math.floor(utcTime.getUTCHours() + localTimeZoneHoursOffset);
+    if (localTimeZoneHours >= 24) {
+        localTimeZoneHours -= 24;
+    }
     let localTimeZoneMinutes = utcTime.getUTCMinutes();
 
     if (localTimeZoneHoursOffset % 1 > 0) {
